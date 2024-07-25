@@ -1,8 +1,50 @@
-import React from "react";
-import Link from "next/link";
-import { Label, Button, Input } from "../../components/ui";
+"use client"
+import React, { useState } from 'react';
+import Link from 'next/link';
+import { Label, Button, Input } from '../../components/ui';
 
 const SignUp = () => {
+  const [keys, setKeys] = useState<{ publicKey: string; secret: string } | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    // Prepare form data
+    const formData = new FormData(e.currentTarget as HTMLFormElement);
+
+    try {
+      // Send form data to the backend
+      const response = await fetch('http://localhost:3000/stellar/generate-keys', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        // body: JSON.stringify({
+        //   fullName: formData.get('full-name'),
+        //   email: formData.get('email'),
+        //   wallet: formData.get('wallet'),
+        //   document: formData.get('document'),
+        // }),
+      });
+    
+      if (!response.ok) {
+        throw new Error('Failed to generate keys');
+      }
+    
+      const data = await response.json();
+      setKeys(data);
+    } catch (error) {
+      console.error('Error:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
+    
+    
+    
+  };
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
@@ -24,7 +66,7 @@ const SignUp = () => {
             </p>
           </h3>
         </div>
-        <form className="space-y-6" action="#" method="POST">
+        <form className="space-y-6" onSubmit={handleSubmit}>
           <div>
             <Label
               htmlFor="full-name"
@@ -103,11 +145,29 @@ const SignUp = () => {
             <Button
               type="submit"
               className="flex w-full justify-center rounded-md bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground shadow-sm hover:bg-primary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+              disabled={isSubmitting}
             >
-              Sign Up
+              {isSubmitting ? 'Signing Up...' : 'Sign Up'}
             </Button>
           </div>
         </form>
+
+        {/* Popup for displaying keys */}
+        {keys && (
+          <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
+            <div className="bg-white p-6 rounded-lg shadow-lg">
+              <h3 className="text-lg font-semibold">Your Stellar Keys</h3>
+              <p className="mt-2"><strong>Public Key:</strong> {keys.publicKey}</p>
+              <p className="mt-2"><strong>Secret Key:</strong> {keys.secret}</p>
+              <Button
+                onClick={() => setKeys(null)}
+                className="mt-4 bg-red-500 text-white hover:bg-red-700"
+              >
+                Close
+              </Button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
