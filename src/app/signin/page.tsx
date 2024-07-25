@@ -1,8 +1,43 @@
-import React from "react";
+"use client"
+import React, { useState } from "react";
 import Link from "next/link";
 import { Button, Label, Input } from "../../components/ui";
 
 const SignIn = () => {
+
+  const [email, setEmail] = useState("");
+  const [publicKey, setPublicKey] = useState(""); 
+
+  const handleSubmit = async (event: { preventDefault: () => void; }) => {
+    event.preventDefault();
+
+    const data = {
+      email,
+      publicKey,
+    };
+
+    try {
+      const response = await fetch("http://localhost:3000/auth/sign-in", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to sign in");
+      }
+
+      const result = await response.json();
+      // Handle successful sign-in (e.g., redirect, store token, etc.)
+      console.log(result);
+    } catch (error) {
+      console.error("Error signing in:", error);
+      // Handle error (e.g., show error message)
+    }
+  };
+  
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
@@ -14,7 +49,7 @@ const SignIn = () => {
             Your vote is your voice. Be heard and shape the future.
           </p>
         </div>
-        <form className="mt-8 space-y-6" action="#" method="POST">
+        <form className="mt-8 space-y-6" action="#" method="POST" onSubmit={handleSubmit}>
           <div className="-space-y-px rounded-md shadow-sm">
             <div>
               <Label htmlFor="email-address" className="sr-only">
@@ -28,19 +63,25 @@ const SignIn = () => {
                 required
                 className="relative block w-full appearance-none rounded-none rounded-t-md border border-input bg-background px-3 py-2 text-foreground placeholder-muted-foreground focus:z-10 focus:border-primary focus:outline-none focus:ring-primary sm:text-sm"
                 placeholder="Email address"
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
           </div>
           <div>
-            <Button
-              variant="outline"
-              className="group relative flex w-full justify-center rounded-md border border-input bg-background py-2 px-4 text-sm font-medium text-foreground transition-colors hover:bg-accent hover:text-accent-foreground focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
-            >
-              <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-                <div className="h-5 w-5 text-foreground group-hover:text-accent-foreground" />
-              </span>
-              Connect Wallet
-            </Button>
+              <Label htmlFor="public-key" className="sr-only">
+                Public Key
+              </Label>
+              <Input
+                id="public-key"
+                name="publicKey"
+                type="text"
+                autoComplete="public-key"
+                required
+                className="relative block w-full appearance-none rounded-none rounded-t-md border border-input bg-background px-3 py-2 text-foreground placeholder-muted-foreground focus:z-10 focus:border-primary focus:outline-none focus:ring-primary sm:text-sm"
+                placeholder="Public Key"
+                value={publicKey}
+                onChange={(e) => setPublicKey(e.target.value)}
+              />
           </div>
           <div>
             <Button
