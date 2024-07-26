@@ -10,11 +10,12 @@ const SignUp = () => {
   const [keys, setKeys] = useState<{
     publicKey: string;
     secret: string;
+    challenge?: string;
   } | null>(null);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [message, setMessage] = useState<string | null>(null);
 
-  const fileInputRef = useRef<HTMLInputElement>(null); // Create a ref for the file input
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files ? e.target.files[0] : null;
@@ -23,7 +24,7 @@ const SignUp = () => {
       const allowedTypes = ["image/png", "image/jpeg"];
       if (!allowedTypes.includes(file.type)) {
         alert("Please upload a PNG, JPG, or JPEG file.");
-        e.target.value = ""; // Clear the input
+        e.target.value = "";
         setDocument(null);
       } else {
         setDocument(file);
@@ -35,7 +36,6 @@ const SignUp = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Prepare form data
     const formData = new FormData();
     formData.append("fullName", fullName);
     formData.append("email", email);
@@ -44,7 +44,6 @@ const SignUp = () => {
     }
 
     try {
-      // Send form data to the backend
       const response = await fetch("http://localhost:3000/auth/sign-up", {
         method: "POST",
         body: formData,
@@ -57,12 +56,10 @@ const SignUp = () => {
       const data = await response.json();
       setKeys(data);
 
-      // Reset form fields
       setFullName("");
       setEmail("");
       setDocument(null);
 
-      // Reset file input
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
@@ -143,16 +140,16 @@ const SignUp = () => {
               htmlFor="document"
               className="block text-sm font-medium text-foreground"
             >
-              Verification Document
+              Document
             </Label>
             <div className="mt-1">
               <Input
                 id="document"
                 name="document"
                 type="file"
+                accept=".png,.jpg,.jpeg"
                 onChange={handleFileChange}
-                required
-                className="block w-full appearance-none rounded-md border border-input bg-background px-3 py-2 placeholder-muted-foreground shadow-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary sm:text-sm"
+                className="block w-full rounded-md border border-input bg-background px-3 py-2 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary sm:text-sm"
                 ref={fileInputRef}
               />
             </div>
@@ -168,7 +165,6 @@ const SignUp = () => {
           </div>
         </form>
 
-        {/* Popup for displaying keys */}
         {keys && (
           <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
             <div className="bg-white p-6 rounded-lg shadow-lg">
@@ -179,6 +175,11 @@ const SignUp = () => {
               <p className="mt-2">
                 <strong>Secret Key:</strong> {keys.secret}
               </p>
+              {keys.challenge && (
+                <p className="mt-2">
+                  <strong>Challenge:</strong> {keys.challenge}
+                </p>
+              )}
               <Button
                 onClick={() => setKeys(null)}
                 className="mt-4 bg-red-500 text-white hover:bg-red-700"
@@ -189,15 +190,14 @@ const SignUp = () => {
           </div>
         )}
 
-        {/* Display message */}
         {message && (
           <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
             <div className="bg-white p-6 rounded-lg shadow-lg">
-            <div className="mt-4 text-center text-sm text-muted-foreground">
-            {message}
-            </div>
+              <div className="mt-4 text-center text-sm text-muted-foreground">
+                {message}
+              </div>
               <Button
-                onClick={() => setKeys(null)}
+                onClick={() => setMessage(null)}
                 className="mt-4 bg-red-500 text-white hover:bg-red-700"
               >
                 Close

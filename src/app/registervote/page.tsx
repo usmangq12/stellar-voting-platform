@@ -39,7 +39,7 @@ export default function Component() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="gender">Gender</Label>
-              <Select id="gender" required>
+              <Select  required>
                 <SelectTrigger>
                   <SelectValue placeholder="Select gender" />
                 </SelectTrigger>
@@ -89,7 +89,7 @@ export default function Component() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="political-party">Political Party (optional)</Label>
-              <Select id="political-party">
+              <Select >
                 <SelectTrigger>
                   <SelectValue placeholder="Select political party" />
                 </SelectTrigger>
