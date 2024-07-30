@@ -1,9 +1,8 @@
 {
-  "/_not-found/page": "app/_not-found/page.js",
-  "/VoteCasting/page": "app/VoteCasting/page.js",
-  "/home/page": "app/home/page.js",
+  "/candidate/page": "app/candidate/page.js",
   "/signin/page": "app/signin/page.js",
-  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/signup/page": "app/signup/page.js",
+  "/home/page": "app/home/page.js",
   "/registervote/page": "app/registervote/page.js",
-  "/candidate/page": "app/candidate/page.js"
+  "/VoteCasting/page": "app/VoteCasting/page.js"
 }

@@ -24,6 +24,8 @@ export default function RegisterVotePage() {
     politicalParty: '',
   });
 
+  console.log("re1", formData)
+
   const handleChange = (e: { target: { id: any; value: any; type: any; files: any; }; }) => {
     const { id, value, type, files } = e.target;
     setFormData(prev => ({
@@ -34,13 +36,15 @@ export default function RegisterVotePage() {
 
   const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
-    const formDataToSend = new FormData();
-    for (const key in formData) {
-      formDataToSend.append(key, formData[key]);
-    }
+    // const formDataToSend = new FormData();
+    // for (const key in formData) {
+    //   formDataToSend.append(key, formData[key]);
+    // }
+
+    console.log("re2", formData)
 
     try {
-      const response = await axios.post('http://localhost:3000/vote/register-vote', formDataToSend, {
+      const response = await axios.post('http://localhost:3000/vote/register-vote', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
