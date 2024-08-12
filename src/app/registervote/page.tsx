@@ -22,9 +22,9 @@ export default function RegisterVotePage() {
     idNumber: '',
     idDocument: null,
     politicalParty: '',
+    userPublicKey: '',
+    userSecretKey: ''
   });
-
-  console.log("re1", formData)
 
   const handleChange = (e: { target: { id: any; value: any; type: any; files: any; }; }) => {
     const { id, value, type, files } = e.target;
@@ -36,15 +36,14 @@ export default function RegisterVotePage() {
 
   const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
-    // const formDataToSend = new FormData();
-    // for (const key in formData) {
-    //   formDataToSend.append(key, formData[key]);
-    // }
-
-    console.log("re2", formData)
-
+    
+    const formDataToSend = new FormData();
+    for (const key in formData) {
+      formDataToSend.append(key, formData[key]);
+    }
+      console.log("formDataToSend", formDataToSend)
     try {
-      const response = await axios.post('http://localhost:3000/vote/register-vote', formData, {
+      const response = await axios.post('http://localhost:3000/vote/register-vote', formDataToSend, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -120,6 +119,14 @@ export default function RegisterVotePage() {
           <div className="space-y-2">
             <Label htmlFor="politicalParty">Political Party</Label>
             <Input id="politicalParty" placeholder="Democratic Party" value={formData.politicalParty} onChange={handleChange} required />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="userPublicKey">User Public Key</Label>
+            <Input id="userPublicKey" placeholder="PublicKey123" value={formData.userPublicKey} onChange={handleChange} required />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="userSecretKey">User Secret Key</Label>
+            <Input id="userSecretKey" placeholder="SecretKey123" type="password" value={formData.userSecretKey} onChange={handleChange} required />
           </div>
           <CardFooter>
             <Button type="submit">Register</Button>

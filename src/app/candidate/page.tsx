@@ -36,17 +36,25 @@ export default function Component() {
   });
 
   const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = event.target;
-
-    if (event.target instanceof HTMLInputElement && event.target.files) {
-      setFormData((prevFormData) => ({
+    const target = event.target;
+  
+    if (target instanceof HTMLInputElement) {
+      if (target.type === 'file') {
+        const files = target.files?.[0]; 
+        setFormData(prevFormData => ({
+          ...prevFormData,
+          [target.id]: files || null, 
+        }));
+      } else {
+        setFormData(prevFormData => ({
+          ...prevFormData,
+          [target.id]: target.value,
+        }));
+      }
+    } else if (target instanceof HTMLTextAreaElement) {
+      setFormData(prevFormData => ({
         ...prevFormData,
-        [name]: event.target.files[0],
-      }));
-    } else {
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        [name]: value,
+        [target.id]: target.value,
       }));
     }
   };

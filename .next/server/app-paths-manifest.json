@@ -1,8 +1,5 @@
 {
-  "/candidate/page": "app/candidate/page.js",
-  "/signin/page": "app/signin/page.js",
-  "/signup/page": "app/signup/page.js",
-  "/home/page": "app/home/page.js",
-  "/registervote/page": "app/registervote/page.js",
-  "/VoteCasting/page": "app/VoteCasting/page.js"
+  "/page": "app/page.js",
+  "/votecasting/page": "app/votecasting/page.js",
+  "/candidate/page": "app/candidate/page.js"
 }

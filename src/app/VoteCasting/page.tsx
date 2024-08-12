@@ -7,7 +7,7 @@ import Link from "next/link";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import axios from 'axios';
 
-export default function CastVotePage() {
+export default function VoteCasting() {
   const [selectedCandidate, setSelectedCandidate] = useState<string | null>(null);
   const [userPublicKey, setUserPublicKey] = useState('');
   const [userSecretKey, setUserSecretKey] = useState('');
